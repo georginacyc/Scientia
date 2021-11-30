@@ -5,6 +5,7 @@
   {{ super() }}
   <style>
     .post_table {
+      width: 100%;
       border: 1px solid black;
       border-radius: 10px;
     }
@@ -34,6 +35,7 @@
       </td>
     </tr>
   </table>
+  <br>
   {% for post in posts %}
   <table class="post_table">
     <tr>
