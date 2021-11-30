@@ -1,4 +1,5 @@
-from flask import Flask, config, request, jsonify, render_template
+from re import search
+from flask import Flask, config, request, jsonify, render_template, redirect
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 import os
@@ -40,12 +41,23 @@ class forum_posts(db.Model):
 def home():
     return render_template("home.html")
 
-@app.route('/forum')
+@app.route('/forum', methods=["GET", "POST"])
 def getPosts():
-    # return render_template("forum_posts.html")
-    posts = forum_posts.query.all()
-    # return '\n'.join([str(post) for post in posts])
+    search_term = request.args.get('s', default=None, type=str)
+    search_term = "%{}%".format(search_term)
+    if search_term != "%None%":
+        query = forum_posts.query.filter(forum_posts.body.like(search_term))
+        query = query.filter(forum_posts.title.like(search_term))
+        query = query.filter(forum_posts.body.like(search_term))
+        posts = query.all()
+    else:
+        posts = forum_posts.query.all()
     return render_template("forum_posts.html", posts=posts)
+
+@app.route('/search', methods=["POST"])
+def searchPosts():
+    searchForm = request.form['searchTerm']
+    return redirect("/forum?s=" + str(searchForm))
 
 if __name__ == '__main__':
     app.run(threaded=True, host='0.0.0.0', port=8080)

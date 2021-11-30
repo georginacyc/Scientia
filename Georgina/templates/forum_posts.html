@@ -4,24 +4,38 @@
 {% block head %}
   {{ super() }}
   <style>
-    table {
+    .post_table {
       border: 1px solid black;
       border-radius: 10px;
     }
     td {
       padding: 10px
     }
+    form { 
+      display: flex; 
+    }
+    input[type=text] { 
+      flex-grow: 1; 
+    }
   </style>
 {% endblock %}
 
 {% block content_body %}
-<h3>All Posts</h3>
-<form>
-  <input type="text" class="form-control" id="searchBar" placeholder="Search...">
-  <button type="submit" class="btn btn-dark">Search</button>
-</form>
+  <table style="width: 100%">
+    <tr>
+      <td>
+        <h3>All Posts</h3>
+      </td>
+      <td style="text-align: right; width:50%">
+        <form action="{{ url_for('searchPosts') }}" method="POST">
+          <input type="text" class="form-control" id="searchBar" name="searchTerm" placeholder="Search...">
+          <button type="submit" href="#" class="btn btn-dark" id="searchButton">Search</button>
+        </form>
+      </td>
+    </tr>
+  </table>
   {% for post in posts %}
-  <table>
+  <table class="post_table">
     <tr>
       <td>
         <i>{{ post.forum }} • {{ post.author }}</i> <br>
