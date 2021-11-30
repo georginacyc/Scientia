@@ -1,2 +1,5 @@
 flask
 boto3
+Flask-sqlalchemy
+Flask-Migrate
+pymysql

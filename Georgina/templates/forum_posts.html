@@ -3,8 +3,33 @@
 {% block title %} - Forum {% endblock %}
 {% block head %}
   {{ super() }}
+  <style>
+    table {
+      border: 1px solid black;
+      border-radius: 10px;
+    }
+    td {
+      padding: 10px
+    }
+  </style>
 {% endblock %}
 
 {% block content_body %}
-insert forum posts here D:
+<h3>All Posts</h3>
+<form>
+  <input type="text" class="form-control" id="searchBar" placeholder="Search...">
+  <button type="submit" class="btn btn-dark">Search</button>
+</form>
+  {% for post in posts %}
+  <table>
+    <tr>
+      <td>
+        <i>{{ post.forum }} • {{ post.author }}</i> <br>
+        <b>{{ post.title }}</b> <br>
+        {{ post.body }}
+      </td>
+    </tr>    
+  </table>
+  <br>
+  {% endfor %}
 {% endblock %}
