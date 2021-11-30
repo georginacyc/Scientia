@@ -8,6 +8,7 @@ from botocore.config import Config
 
 app = Flask(__name__)
 
+# establishing connection with RDS database. contains credentials.
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://admin:password@scientia.cecynww2bmvp.us-east-1.rds.amazonaws.com/scientiaTest'
 db = SQLAlchemy(app)
 
@@ -43,19 +44,27 @@ def home():
 
 @app.route('/forum', methods=["GET", "POST"])
 def getPosts():
+    # retrieving a search term, if any
     search_term = request.args.get('s', default=None, type=str)
     search_term = "%{}%".format(search_term)
+
+    # checks if there is a search term
     if search_term != "%None%":
+        # chain queries together so that search terms dont just search the "body" of a post
         query = forum_posts.query.filter(forum_posts.body.like(search_term))
         query = query.filter(forum_posts.title.like(search_term))
         query = query.filter(forum_posts.body.like(search_term))
         posts = query.all()
     else:
         posts = forum_posts.query.all()
+    
     return render_template("forum_posts.html", posts=posts)
 
 @app.route('/search', methods=["POST"])
 def searchPosts():
+    # a route to handle the search data
+
+    # retrieving search term from search bar, then redirecting back to forums page with results.
     searchForm = request.form['searchTerm']
     return redirect("/forum?s=" + str(searchForm))
 
