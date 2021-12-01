@@ -51,9 +51,7 @@ def getPosts():
     # checks if there is a search term
     if search_term != "%None%":
         # chain queries together so that search terms dont just search the "body" of a post
-        query = forum_posts.query.filter(forum_posts.body.like(search_term))
-        query = query.filter(forum_posts.title.like(search_term))
-        query = query.filter(forum_posts.body.like(search_term))
+        query = forum_posts.query.filter((forum_posts.body.like(search_term)) | (forum_posts.title.like(search_term)) | (forum_posts.body.like(search_term)))
         posts = query.all()
     else:
         posts = forum_posts.query.all()
