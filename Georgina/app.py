@@ -9,7 +9,7 @@ from botocore.config import Config
 app = Flask(__name__)
 
 # establishing connection with RDS database. contains credentials.
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://admin:password@scientia.cecynww2bmvp.us-east-1.rds.amazonaws.com/scientiaTest'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://admin:password@scientia-db.cecynww2bmvp.us-east-1.rds.amazonaws.com/scientia_forum'
 db = SQLAlchemy(app)
 
 # basically disabling logs, so no bloating
