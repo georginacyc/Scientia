@@ -1,72 +1,105 @@
-from flask import Flask, render_template, request, redirect, url_for
-from Forms import CreateUserForm
+from flask import Flask, render_template, request, redirect, flash
 from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
-import shelve, User
-import pymysql
-import os
-import boto3
+from flask_login import login_required, current_user, login_user, logout_user
+from models import login, UserModel
+import shelve
+import logging
+from os import urandom
 
 app = Flask(__name__)
-
-# Establish connection with the database.
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://admin:scientia@database-1.cydo3cy4iiki.us-east-1.rds.amazonaws.com/scientia'
-db = SQLAlchemy(app)
-
-# Disable logs.
+# App configuration
+app.config['SECRET_KEY'] = urandom(32)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://admin:password@scientia-db.cydo3cy4iiki.us-east-1.rds.amazonaws.com/scientiadb'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# Migrate
-migrate = Migrate(app, db)
+# Establish connection with the database.
+db = SQLAlchemy(app)
+
+# Initialise the app
+db.init_app(app)
+login.init_app(app)
+login.login_view = 'login'
 
 @app.route('/')
 def home():
-    return render_template('home.html')
+    return render_template('/home.html')
 
-@app.route('/register', methods=['GET', 'POST'])
-def register():
-    createUserForm = CreateUserForm(request.form)
-    if request.method == 'POST' and createUserForm.validate():
-        usersDict = {}
-        db = shelve.open('storage.db', 'c')
+@app.before_first_request
+def create_all():
+    db.create_all()
 
-        try:
-            usersDict = db['Users']
-        except:
-            print("Error in retrieving users from database.")
-
-        user = User.User(createUserForm.firstName.data, createUserForm.lastName.data, createUserForm.email.data,
-                         createUserForm.password.data, createUserForm.bio.data, createUserForm.learn.data,
-                         createUserForm.teach.data)
-        usersDict[user.get_userID()] = user
-        db['Users'] = usersDict
-
-        print(user.get_firstName(), user.get_lastName(), "was stored in database with user ID = ", user.get_userID())
-        db.close()
-        return redirect(url_for('home'))
-    return render_template('register.html', form=createUserForm)
-
-@app.route('/retrieveUsers')
-def retrieveUsers():
-    usersDict = {}
-    db = shelve.open('storage.db', 'r')
-    usersDict = db['Users']
-    db.close()
-
-    usersList = []
-    for key in usersDict:
-        user = usersDict.get(key)
-        usersList.append(user)
-
-    return render_template('retrieveUsers.html', usersList=usersList, count=len(usersList))
-
-@app.route('/login')
+@app.route('/login', methods=['POST', 'GET'])
 def login():
+    if current_user.is_authenticated:
+        flash("You are already logged in!")
+        return redirect('/profile')
+
+    if request.method == 'POST':
+        req_email = request.form['email']
+        logging.warning(req_email)
+        logging.warning(UserModel.query.filter_by(email=req_email))
+        user = UserModel.query.filter_by(email=req_email).first()
+        logging.warning(user)
+        if user is not None and user.check_password(request.form['password']):
+            login_user(user)
+            return redirect('/profile')
+
     return render_template('login.html')
 
+
+@app.route('/register', methods=['POST', 'GET'])
+def register():
+    if current_user.is_authenticated:
+        flash("You are already logged in!")
+        return redirect('/profile')
+
+    if request.method == 'POST':
+        email = request.form['email']
+        fname = request.form['fname']
+        lname = request.form['lname']
+        bio = request.form['bio']
+        learn = request.form['learn']
+        teach = request.form['teach']
+        password = request.form['password']
+
+        if UserModel.query.filter_by(email=email).first():
+            return ('Email already Present')
+
+        user = UserModel(email=email, fname=fname, lname=lname, bio=bio, learn=learn, teach=teach)
+        user.set_password(password)
+        db.session.add(user)
+        db.session.commit()
+        return redirect('/login')
+    return render_template('register.html')
+
+
+@app.route('/logout')
+def logout():
+    logout_user()
+    return redirect('/')
+
 @app.route('/profile', methods=["GET", "POST"])
+@login_required
 def getProfile():
     return render_template('profile.html')
+
+@app.route('/editProfile', methods=["GET", "POST"])
+@login_required
+def editProfile():
+    if request.method == 'POST':
+        email = request.form['email']
+
+        get_user = UserModel.query.filter_by(email=email).first()
+        get_user.fname = request.form['fname']
+        get_user.lname = request.form['lname']
+        get_user.bio = request.form['bio']
+        get_user.learn = request.form['learn']
+        get_user.teach = request.form['teach']
+
+        db.session.commit()
+        return redirect('/profile')
+
+    return render_template('edit_profile.html')
 
 if __name__ == '__main__':
     app.run()

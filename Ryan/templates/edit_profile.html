@@ -1,0 +1,28 @@
+{% block title %}Scientia - Edit Profile{% endblock %}
+{% block content %}
+
+<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/edit.css') }}">
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@500&display=swap" rel="stylesheet">
+
+<div class="main">
+    <input type="checkbox" id="chk" aria-hidden="true">
+
+    <div class="signup">
+        <form action="" method="POST">
+            <label for="chk" aria-hidden="true">Edit Profile</label>
+            <input type="text" name="fname" placeholder="First Name" required="" value="{{ current_user.fname }}">
+            <input type="text" name="lname" placeholder="Last Name" required="" value="{{ current_user.lname }}">
+            <input type="email" name="email" placeholder="Email" required="" value="{{ current_user.email }}">
+            <input type="text" name="bio" placeholder="Describe yourself..." value="{{ current_user.bio }}">
+            <input type="text" name="learn" placeholder="What do you want to learn?" value="{{ current_user.learn }}">
+            <input type="text" name="teach" placeholder="What do you want to teach?" value="{{ current_user.teach }}">
+            <input class="submit-button" type="submit" value="submit">
+        </form>
+    </div>
+
+    <div class="login">
+
+    </div>
+</div>
+
+{% endblock %}

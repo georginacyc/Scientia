@@ -4,30 +4,27 @@
 
 <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/profile.css') }}">
 
-<div class="content-section">
-    <div class="media">
-        <img class="avatar-img" src="https://static.zerochan.net/Makima.%28Chainsaw.Man%29.full.3222324.jpg" width="250px" height="250px">
-        <div class="media-body">
-            <h1 class="account-heading">Username</h1>
-            <br>
-            {% for account in posts %}
-            <h5>✨ Live, laugh, love ✨</h5>
-            <h5>Wants to learn: {{ profile.learn }}</h5>
-            <h5>Wants to teach: {{ profile.teach }} </h5>
-            <a href="#">View availability</a>
-            {% endfor %}
-        </div>
-    </div>
-    <br><br>
-    <div class="float-container">
-        <div class="float-child">
-            <a href="#">Feed</a>
-        </div>
-        <div class="float-child">
-            <a href="#">Activity</a>
+<div class="container mt-5">
+    <div class="row d-flex justify-content-center">
+        <div class="col-md-7">
+            <div class="card p-3 py-4">
+                <div class="text-center"> <img src="https://i.pinimg.com/564x/b2/17/04/b21704ff02d5b3ef1fc525dc18978a5e.jpg" width="100" class="rounded-circle"> </div>
+                <div class="text-center mt-3"> <span class="bg-secondary p-1 px-4 rounded text-white">Pro</span>
+                    <h5 class="mt-2 mb-0">{{ current_user.fname }} {{ current_user.lname }}</h5> <span>{{ current_user.bio }}</span>
+                    <div class="px-4 mt-1">Hey there! I want to learn <b>{{ current_user.learn }}</b> and teach <b>{{ current_user.teach }}</b>!</p>
+                    </div>
+                    <ul class="social-list">
+                        <li><i class="fa fa-facebook"></i></li>
+                        <li><i class="fa fa-dribbble"></i></li>
+                        <li><i class="fa fa-instagram"></i></li>
+                        <li><i class="fa fa-linkedin"></i></li>
+                        <li><i class="fa fa-google"></i></li>
+                    </ul>
+                    <div class="buttons"><a href="{{ url_for('editProfile') }}">Edit Profile</a><a href="{{ url_for('logout') }}">Logout</a></div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
-
 
 {% endblock %}

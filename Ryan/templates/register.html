@@ -1,33 +1,29 @@
-{% extends "base.html" %}
 {% block title %}Scientia - Register{% endblock %}
-
 {% block content %}
-{% from "includes/_formHelper.html" import render_field %}
 
-<h1 class="display-4">Register</h1>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/register.css') }}">
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@500&display=swap" rel="stylesheet">
 
-<form method="POST" action="">
-  <div class="form-group">
-    {{ render_field(form.firstName, class="form-control") }}
-  </div>
-  <div class="form-group">
-    {{ render_field(form.lastName, class="form-control") }}
-  </div>
-  <div class="form-group">
-    {{ render_field(form.email, class="form-control") }}
-  </div>
-  <div class="form-group">
-    {{ render_field(form.password, class="form-control") }}
-  </div>
-  <div class="form-group">
-    {{ render_field(form.bio, class="form-control") }}
-  </div>
-  <div class="form-group">
-    {{ render_field(form.learn, class="form-control") }}
-  </div>
-  <div class="form-group">
-    {{ render_field(form.teach, class="form-control") }}
-  </div>
-  <input type="submit" value="Submit" class="btn btn-primary">
-</form>
+<div class="main">
+    <input type="checkbox" id="chk" aria-hidden="true">
+
+    <div class="signup">
+        <form action="" method="POST">
+            <label for="chk" aria-hidden="true">Sign up</label>
+            <input type="text" name="fname" placeholder="First Name" required="">
+            <input type="text" name="lname" placeholder="Last Name" required="">
+            <input type="email" name="email" placeholder="Email" required="">
+            <input type="password" name="password" placeholder="Password" required="">
+            <input type="text" name="bio" placeholder="Describe yourself...">
+            <input type="text" name="learn" placeholder="What do you want to learn?">
+            <input type="text" name="teach" placeholder="What do you want to teach?">
+            <input class="submit-button" type="submit" value="submit">
+        </form>
+    </div>
+
+    <div class="login">
+
+    </div>
+</div>
+
 {% endblock %}
