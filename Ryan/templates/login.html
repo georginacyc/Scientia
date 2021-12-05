@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Scientia - Profile{% endblock %}
+{% block content %}
+
+<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/login.css') }}">
+
+<!-- Login Section -->
+<div id="rectangle-border">
+    <div class="main-content">
+        <div class="header">
+            <h1>Login</h1>
+        </div>
+        <h2>───────────</h2>
+        <br>
+        <!-- Username -->
+        <div class="username">
+            <h2>Username</h2>
+        </div>
+        <input type="text" id="username" name="Username">
+        <br><br>
+        <!-- Password -->
+        <div class="username">
+            <h2>Password</h2>
+        </div>
+        <input type="text" id="password" name="Password">
+        <br><br>
+        <!-- Submit Button -->
+        <div class="button">
+            <input type="button" id="submit" name="Submit" value="Submit">
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
