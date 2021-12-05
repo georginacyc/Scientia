@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}Library Loan System - Retrieve Users{% endblock %}
+{% block content %}
+<h1 class="display-4">Retrieve Users</h1>
+<div>
+    {% if count == 0 %}
+    <p>There are no users.</p>
+    {% elif count == 1 %}
+    <p>There is 1 user.</p>
+    {% else %}
+    <p>There are {{ count }} users.</p>
+    {% endif %}
+</div>
+<div>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>User ID</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Email</th>
+            <th>Bio</th>
+            <th>Learn</th>
+            <th>Teach</th>
+            <th></th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for user in usersList %}
+        <tr>
+            <td>{{ user.get_userID() }}</td>
+            <td>{{ user.get_firstName() }}</td>
+            <td>{{ user.get_lastName() }}</td>
+            <td>{{ user.get_email() }}</td>
+            <td>{{ user.get_bio() }}</td>
+            <td>{{ user.get_learn() }}</td>
+            <td>{{ user.get_teach() }}</td>
+            <td><a href="#" class="btn btn-warning">Update</a></td>
+            <td>
+                <form action="" method="POST">
+                    <input type="submit" value="Delete" class="btn btndanger">
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

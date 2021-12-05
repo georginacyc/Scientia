@@ -1,10 +1,33 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "base.html" %}
+{% block title %}Scientia - Profile{% endblock %}
+{% block content %}
 
-</body>
-</html>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/profile.css') }}">
+
+<div class="content-section">
+    <div class="media">
+        <img class="avatar-img" src="https://static.zerochan.net/Makima.%28Chainsaw.Man%29.full.3222324.jpg" width="250px" height="250px">
+        <div class="media-body">
+            <h1 class="account-heading">Username</h1>
+            <br>
+            {% for account in posts %}
+            <h5>✨ Live, laugh, love ✨</h5>
+            <h5>Wants to learn: {{ profile.learn }}</h5>
+            <h5>Wants to teach: {{ profile.teach }} </h5>
+            <a href="#">View availability</a>
+            {% endfor %}
+        </div>
+    </div>
+    <br><br>
+    <div class="float-container">
+        <div class="float-child">
+            <a href="#">Feed</a>
+        </div>
+        <div class="float-child">
+            <a href="#">Activity</a>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
