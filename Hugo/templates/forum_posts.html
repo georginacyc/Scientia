@@ -1,0 +1,110 @@
+{% extends "template.html" %}
+
+{% block title %} - Forum {% endblock %}
+{% block head %}
+  {{ super() }}
+  <style>
+    .post_table {
+      width: 100%;
+      border: 1px solid black;
+      border-radius: 10px;
+    }
+    td {
+      padding: 10px
+    }
+    form { 
+      display: flex; 
+    }
+    input[type=text] { 
+      flex-grow: 1; 
+    }
+    
+        .post_table_static {
+      width: 100%;
+      border: 1px solid black;
+      border-radius: 10px;
+    }
+    td {
+      padding: 10px
+    }
+    form { 
+      display: flex; 
+    }
+    input[type=text] { 
+      flex-grow: 1; 
+    }
+    
+  .button {
+  background-color: #f4511e;
+  border: none;
+  color: white;
+  padding: 5px 13px;
+  text-align: center;
+  font-size: 16px;
+
+  opacity: 0.6;
+  transition: 0.3s;
+  display: inline-block;
+  text-decoration: none;
+  cursor: pointer;
+  }
+
+.button:hover {opacity: 1}
+    
+  </style>
+  
+  
+  
+{% endblock %}
+
+{% block content_body %}
+  <table style="width: 100%">
+    <tr>
+      <td>
+        <h3>All Posts</h3>
+      </td>
+      <td style="text-align: right; width:50%">
+        <form action="{{ url_for('searchPosts') }}" method="POST">
+          <input type="text" class="form-control" id="searchBar" name="searchTerm" placeholder="Search...">
+          <button type="submit" href="#" class="btn btn-dark" id="searchButton">Search</button>
+        </form>
+      </td>
+    </tr>
+  </table>
+  <br>
+  
+      
+      <table class="post_table_static">
+        <form action="{{ url_for('transButton') }}" method="POST">
+    <tr>
+      <td>
+        
+        <i>PC Building • Liam Nissan</i><br>
+        
+        <b>DO NOT UPGRADE TO WINDOWS 11</b> <br>
+        Windows 11 is currently extremely unstable and untested, many programs will meet with multiple issues.
+        Please hold off the update if you're planning to do so.<br>
+        If you did upgrade to Windows 11, don't panic as theres an easy way to transition back into Windows 10.<br>
+        As long as it hasn't been more than 10 days since you installed Windows 11 theres a built in feature that allows you to revert back to Windows 10.<br><br>
+        <button type="submit" class="button">Translate</button> <br>
+        </form>
+      </td>
+    </tr>    
+    </form>
+  </table>
+  
+  <br>
+  
+  {% for post in posts %}
+  <table class="post_table">
+    <tr>
+      <td>
+        <i>{{ post.forum }} • {{ post.author }}</i> <br>
+        <b>{{ post.title }}</b> <br>
+        {{ post.body }}
+      </td>
+    </tr>    
+  </table>
+  <br>
+  {% endfor %}
+{% endblock %}
