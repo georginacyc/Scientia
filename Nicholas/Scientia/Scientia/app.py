@@ -8,7 +8,7 @@ from botocore.config import Config
 app = Flask(__name__)
 
 # establishing connection with RDS database. contains credentials.
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://admin:password@scientia-db.cecynww2bmvp.us-east-1.rds.amazonaws.com/scientia_forum'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://admin:password@database-1.cjmc081jd1av.us-east-1.rds.amazonaws.com/donation'
 db = SQLAlchemy(app)
 
 # basically disabling logs, so no bloating
@@ -16,7 +16,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 migrate = Migrate(app, db)
 
-class forum_posts(db.Model):
+class donation(db.Model):
     __tablename__ = "donation"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -54,9 +54,9 @@ def paymentsuccess():
 def paymentcancelled():
     return render_template("Oncancel.html")
 
-#if __name__ == '__main__':
- #   app.run(threaded=True, host='0.0.0.0', port=8080)
-
 if __name__ == '__main__':
+   app.run(threaded=True, host='0.0.0.0', port=8080)
+
+#if __name__ == '__main__':
     # Run the app server on localhost:4449
-    app.run('localhost', 4449)
+ #   app.run('localhost', 4449)

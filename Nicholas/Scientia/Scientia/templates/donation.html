@@ -37,11 +37,11 @@
         onApprove: function (data, actions) {
             return actions.order.capture().then(function (details) {
                 console.log(details)
-                window.location.replace("http://localhost:63342/tutorial/paypal/success.php")
+                window.location.replace("http://172.20.10.2:8080/success")
             })
         },
         onCancel: function (data) {
-            window.location.replace("http://localhost:63342/tutorial/paypal/Oncancel.php")
+            window.location.replace("http://172.20.10.2:8080/Oncancel")
         }
     }).render('body');</script>
 {% endblock %}
