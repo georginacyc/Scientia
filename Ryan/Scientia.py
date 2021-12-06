@@ -2,7 +2,6 @@ from flask import Flask, render_template, request, redirect, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import login_required, current_user, login_user, logout_user
 from models import login, UserModel
-import shelve
 import logging
 from os import urandom
 
@@ -23,10 +22,6 @@ login.login_view = 'login'
 @app.route('/')
 def home():
     return render_template('/home.html')
-
-@app.before_first_request
-def create_all():
-    db.create_all()
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
@@ -102,4 +97,4 @@ def editProfile():
     return render_template('edit_profile.html')
 
 if __name__ == '__main__':
-    app.run()
+    app.run(threaded=True, host='0.0.0.0', port=8080)
