@@ -8,7 +8,7 @@ from os import urandom
 app = Flask(__name__)
 # App configuration
 app.config['SECRET_KEY'] = urandom(32)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://admin:password@scientia-db.cydo3cy4iiki.us-east-1.rds.amazonaws.com/scientiadb'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://admin:scientia@database-1.cj8hsxvowxw9.us-east-1.rds.amazonaws.com/scientiadb'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Establish connection with the database.
