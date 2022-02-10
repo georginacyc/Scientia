@@ -1,21 +1,30 @@
 from re import search
-from flask import Flask, config, request, jsonify, render_template, redirect, flash, url_for
+from argparse import ArgumentParser
+from flask import Flask, config, request, jsonify, render_template, redirect, flash, url_for, send_file
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 import os
+import sys
 import boto3
 from botocore.config import Config
 from bs4 import BeautifulSoup
 from urllib.request import Request, urlopen
 
+from boto3 import Session
+from botocore.exceptions import BotoCoreError, ClientError
+
+AUDIO_FORMATS = {"ogg_vorbis": "audio/ogg",
+                 "mp3": "audio/mpeg",
+                 "pcm": "audio/wave; codecs=1"}
+
 app = Flask(__name__)
-app.secret_key = 'dont tell anyone'
+app.secret_key = os.urandom(24)
 
 # establishing connection with RDS database. contains credentials.
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://admin:password@scientiadatabase.cuwo35oct9hp.us-east-1.rds.amazonaws.com/forumDb'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://admin:password@scientiadatabase2.cuwo35oct9hp.us-east-1.rds.amazonaws.com/forumDb'
 db = SQLAlchemy(app)
 
 # basically disabling logs, so no bloating
@@ -23,11 +32,96 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 migrate = Migrate(app, db)
 
+
+polly = boto3.client("polly")
+
+# simple function that calles teh aws function and translates any inputted text.
 client = boto3.client('translate', region_name="us-east-1")
 text = "DO NOT UPGRADE TO WINDOWS 11 11 is currently extremely unstable and untested, many programs will meet with multiple issues. Please hold off the update if youre planning to do so. If you did upgrade to Windows 11, don't panic as theres an easy way to transition back into Windows 10. As long as it hasn't been more than 10 days since you installed Windows 11 theres a built in feature that allows you to revert back to Windows 10."
 result = client.translate_text(Text=text, SourceLanguageCode="en",
-TargetLanguageCode="es")
+TargetLanguageCode="de")
 
+
+# Simple exception class
+class InvalidUsage(Exception):
+    status_code = 400
+
+    def __init__(self, message, status_code=None, payload=None):
+        Exception.__init__(self)
+        self.message = message
+        if status_code is not None:
+            self.status_code = status_code
+        self.payload = payload
+
+    def to_dict(self):
+        rv = dict(self.payload or ())
+        rv['message'] = self.message
+        return rv
+        
+# Register error handler
+@app.errorhandler(InvalidUsage)
+def handle_invalid_usage(error):
+    response = jsonify(error.to_dict())
+    response.status_code = error.status_code
+    return response
+    
+@app.route('/read', methods=['GET'])
+def read():
+    """Handles routing for reading text (speech synthesis)"""
+    # Get the parameters from the query string
+    try:
+        outputFormat = request.args.get('outputFormat')
+        text = request.args.get('text')
+        voiceId = request.args.get('voiceId')
+    except TypeError:
+        raise InvalidUsage("Wrong parameters", status_code=400)
+
+    # Validate the parameters, set error flag in case of unexpected
+    # values
+    if len(text) == 0 or len(voiceId) == 0 or \
+            outputFormat not in AUDIO_FORMATS:
+        raise InvalidUsage("Wrong parameters", status_code=400)
+    else:
+        try:
+            # Request speech synthesis
+            response = polly.synthesize_speech(Text=text,
+                                               VoiceId=voiceId,
+                                               OutputFormat=outputFormat)
+        except (BotoCoreError, ClientError) as err:
+            # The service returned an error
+            raise InvalidUsage(str(err), status_code=500)
+
+        return send_file(response.get("AudioStream"),
+                         AUDIO_FORMATS[outputFormat])
+
+@app.route('/voices', methods=['GET'])
+def voices():
+    """Handles routing for listing available voices"""
+    params = {}
+    voices = []
+
+    try:
+        # Request list of available voices, if a continuation token
+        # was returned by the previous call then use it to continue
+        # listing
+        response = polly.describe_voices(**params)
+    except (BotoCoreError, ClientError) as err:
+        # The service returned an error
+        raise InvalidUsage(str(err), status_code=500)
+
+    # Collect all the voices
+    voices.extend(response.get("Voices", []))
+
+    return jsonify(voices)
+
+
+# Define and parse the command line arguments
+cli = ArgumentParser(description='Example Flask Application')
+cli.add_argument(
+    "-p", "--port", type=int, metavar="PORT", dest="port", default=8000)
+cli.add_argument(
+    "--host", type=str, metavar="HOST", dest="host", default="localhost")
+arguments = cli.parse_args()
 
 class forum_posts(db.Model):
     __tablename__ = "forum_posts"
