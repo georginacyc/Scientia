@@ -1,38 +1,13 @@
 from flask import Flask, config, request, jsonify, render_template, redirect
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+import pymysql
 import os
 import boto3
 from botocore.config import Config
+import rds_db as db
 
 app = Flask(__name__)
-
-# establishing connection with RDS database. contains credentials.
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://admin:password@database-1.cjmc081jd1av.us-east-1.rds.amazonaws.com/donation'
-db = SQLAlchemy(app)
-
-# basically disabling logs, so no bloating
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-migrate = Migrate(app, db)
-
-class donation(db.Model):
-    __tablename__ = "donation"
-
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String())
-    amount = db.Column(db.Float())
-    donor = db.Column(db.String())
-
-    def __init__(self, name, amount, donor):
-        self.name = name
-        self.amount = amount
-        self.donor = donor
-       
-
-    # how the data is represented. this affects how the data will be returned on a query. MUST BE STRING
-    # def __repr__(self):
-    #     return f"{self.forum},{self.type},{self.title},{self.body},{self.author}"
 
 @app.route('/')
 def home():
@@ -41,6 +16,19 @@ def home():
 @app.route('/donation', methods=["GET", "POST"])
 def donate():
     return render_template("donation.html")
+
+@app.route('/insert',methods = ['POST'])
+def insert():
+    
+    if request.method == 'POST':
+        tname = request.form['tname']
+        amount = request.form['amount']
+        db.insert_details(tname,amount)
+        details = db.get_details()
+        print(details)
+        for detail in details:
+            var = detail
+        return render_template('success.html')
 
 @app.route('/profile')
 def viewProfile():
@@ -54,9 +42,8 @@ def paymentsuccess():
 def paymentcancelled():
     return render_template("Oncancel.html")
 
-if __name__ == '__main__':
-   app.run(threaded=True, host='0.0.0.0', port=8080)
-
 #if __name__ == '__main__':
-    # Run the app server on localhost:4449
- #   app.run('localhost', 4449)
+#  app.run(threaded=True, host='0.0.0.0', port=8080)
+
+if __name__ == '__main__':
+    app.run('localhost', 4449)
