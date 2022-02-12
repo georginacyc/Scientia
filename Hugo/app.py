@@ -170,7 +170,7 @@ def getPostsSP():
 @app.route('/forumTR', methods=["POST"])
 def transButton():
     flash (result['TranslatedText'])
-    return redirect('/forumSP');
+    return redirect('/forumSP')
 
 @app.route('/search', methods=["POST"])
 def searchPosts():
