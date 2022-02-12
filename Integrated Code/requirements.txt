@@ -1,0 +1,7 @@
+flask
+boto3
+Flask-sqlalchemy
+Flask-Migrate
+pymysql
+WTForms
+flask-wtf

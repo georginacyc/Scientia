@@ -1,0 +1,259 @@
+{% extends "template.html" %}
+
+{% block title %} - Forum {% endblock %}
+{% block head %}
+  {{ super() }}
+  <style>
+    .post_table {
+      width: 100%;
+      border: 1px solid black;
+      border-radius: 10px;
+    }
+    td {
+      padding: 10px
+    }
+    form { 
+      display: flex; 
+    }
+    input[type=text] { 
+      flex-grow: 1; 
+    }
+    
+        .post_table_static {
+      width: 100%;
+      border: 1px solid black;
+      border-radius: 10px;
+    }
+    td {
+      padding: 10px
+    }
+    form { 
+      display: flex; 
+    }
+    input[type=text] { 
+      flex-grow: 1; 
+    }
+    
+    textarea {
+  resize: none;
+  }
+    
+  </style>
+  
+  
+  
+  
+{% endblock %}
+
+{% block content_body %}
+
+<script>
+        /*
+         * This sample code requires a web browser with support for both the
+         * HTML5 and ECMAScript 5 standards; the following is a non-comprehensive
+         * list of compliant browsers and their minimum version:
+         *
+         * - Chrome 23.0+
+         * - Firefox 21.0+
+         * - Internet Explorer 9.0+
+         * - Edge 12.0+
+         * - Opera 15.0+
+         * - Safari 6.1+
+         * - Android (stock web browser) 4.4+
+         * - Chrome for Android 51.0+
+         * - Firefox for Android 48.0+
+         * - Opera Mobile 37.0+
+         * - iOS (Safari Mobile and Chrome) 3.2+
+         * - Internet Explorer Mobile 10.0+
+         * - Blackberry Browser 10.0+
+         */
+
+        // Mapping of the OutputFormat parameter of the SynthesizeSpeech API
+        // and the audio format strings understood by the browser
+        var AUDIO_FORMATS = {
+            'ogg_vorbis': 'audio/ogg',
+            'mp3': 'audio/mpeg',
+            'pcm': 'audio/wave; codecs=1'
+        };
+
+        /**
+         * Handles fetching JSON over HTTP
+         */
+        function fetchJSON(method, url, onSuccess, onError) {
+            var request = new XMLHttpRequest();
+            request.open(method, url, true);
+            request.onload = function () {
+                // If loading is complete
+                if (request.readyState === 4) {
+                    // if the request was successful
+                    if (request.status === 200) {
+                        var data;
+
+                        // Parse the JSON in the response
+                        try {
+                            data = JSON.parse(request.responseText);
+                        } catch (error) {
+                            onError(request.status, error.toString());
+                        }
+
+                        onSuccess(data);
+                    } else {
+                        onError(request.status, request.responseText)
+                    }
+                }
+            };
+
+            request.send();
+        }
+
+        /**
+         * Returns a list of audio formats supported by the browser
+         */
+        function getSupportedAudioFormats(player) {
+            return Object.keys(AUDIO_FORMATS)
+                .filter(function (format) {
+                    var supported = player.canPlayType(AUDIO_FORMATS[format]);
+                    return supported === 'probably' || supported === 'maybe';
+                });
+        }
+
+        // Initialize the application when the DOM is loaded and ready to be
+        // manipulated
+        document.addEventListener("DOMContentLoaded", function () {
+            var input = document.getElementById('input'),
+                voiceMenu = document.getElementById('voice'),
+                text = document.getElementById('text'),
+                player = document.getElementById('player'),
+                submit = document.getElementById('submit'),
+                supportedFormats = getSupportedAudioFormats(player);
+
+            // Display a message and don't allow submitting the form if the
+            // browser doesn't support any of the available audio formats
+            if (supportedFormats.length === 0) {
+                submit.disabled = true;
+                alert('The web browser in use does not support any of the' +
+                      ' available audio formats. Please try with a different' +
+                      ' one.');
+            }
+
+            // Play the audio stream when the form is submitted successfully
+            input.addEventListener('submit', function (event) {
+                // Validate the fields in the form, display a message if
+                // unexpected values are encountered
+                if (voiceMenu.selectedIndex <= 0 || text.value.length === 0) {
+                    alert('Please fill in all the fields.');
+                } else {
+                    var selectedVoice = voiceMenu
+                                            .options[voiceMenu.selectedIndex]
+                                            .value;
+
+                    // Point the player to the streaming server
+                    player.src = '/read?voiceId=' +
+                        encodeURIComponent(selectedVoice) +
+                        '&text=' + encodeURIComponent(text.value) +
+                        '&outputFormat=' + supportedFormats[0];
+                    player.play();
+                }
+
+                // Stop the form from submitting,
+                // Submitting the form is allowed only if the browser doesn't
+                // support Javascript to ensure functionality in such a case
+                event.preventDefault();
+            });
+
+            // Load the list of available voices and display them in a menu
+            fetchJSON('GET', '/voices',
+                // If the request succeeds
+                function (voices) {
+                    var container = document.createDocumentFragment();
+
+                    // Build the list of options for the menu
+                    voices.forEach(function (voice) {
+                        var option = document.createElement('option');
+                        option.value = voice['Id'];
+                        option.innerHTML = voice['Name'] + ' (' +
+                            voice['Gender'] + ', ' +
+                            voice['LanguageName'] + ')';
+                        container.appendChild(option);
+                    });
+
+                    // Add the options to the menu and enable the form field
+                    voiceMenu.appendChild(container);
+                    voiceMenu.disabled = false;
+                },
+                // If the request fails
+                function (status, response) {
+                    // Display a message in case loading data from the server
+                    // fails
+                    alert(status + ' - ' + response);
+                });
+        });
+
+    </script>
+
+
+  <table style="width: 100%">
+    <tr>
+      <td>
+        <h3>All Posts</h3>
+      </td>
+      <td style="text-align: right; width:50%">
+        <form action="{{ url_for('searchPosts') }}" method="POST">
+          <input type="text" class="form-control" id="searchBar" name="searchTerm" placeholder="Search...">
+          <button type="submit" href="#" class="btn btn-dark" id="searchButton">Search</button>
+        </form>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+      <table class="post_table_static">
+    <tr>
+      <td>
+        <i>PC Building • Liam Nissan</i> <br><br>
+        <b>DO NOT UPGRADE TO WINDOWS 11</b> <br>
+        Windows 11 is currently extremely unstable and untested, many programs will meet with multiple issues.
+        Please hold off the update if you're planning to do so.<br>
+        If you did upgrade to Windows 11, don't panic as theres an easy way to transition back into Windows 10.<br>
+        As long as it hasn't been more than 10 days since you installed Windows 11 theres a built in feature that allows you to revert back to Windows 10.<br><br>
+      </td>
+    </tr>    
+  </table>
+
+    <table class="post_table_static">
+    <form id="input" method="GET" action="/read">
+    <tr>
+      <td>
+        <i>Translated Message</i> <br><br>
+
+      {% for message in get_flashed_messages() %}
+          {{ message }}
+      {% endfor %}
+          <br><br>
+                  <div>
+            <label for="voice">Select a voice:</label>
+            <select id="voice" name="voiceId" disabled>
+                <option value="">Choose a voice...</option>
+            </select>
+        </div>
+    
+        <div>
+            <label for="text"></label>
+            <textarea id="text" maxlength="1000" minlength="1" name="text"
+                    style="display:none;" placeholder="Type some text here...">NICHT AUF WINDOWS 11 11 UPGRADEN ist derzeit extrem instabil und nicht getestet, viele Programme werden auf mehrere Probleme stoßen. Bitte halten Sie das Update zurück, wenn Sie dies planen. Wenn Sie auf Windows 11 aktualisiert haben, geraten Sie nicht in Panik, da es eine einfache Möglichkeit gibt, wieder zu Windows 10 zu wechseln. Solange Sie Windows 11 nicht länger als 10 Tage installiert haben, gibt es eine integrierte Funktion, mit der Sie zu Windows 10 zurückkehren können.</textarea>
+        </div>
+      
+      <input type="submit" value="Read" id="submit" />
+      </td>
+    </tr>
+
+        
+    </form>
+
+  </table>
+  <audio id="player"></audio>
+  
+      
+  <br>
+  
+  {% endblock %}
