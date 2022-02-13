@@ -10,7 +10,6 @@ import os
 import sys
 import boto3
 from botocore.config import Config
-from bs4 import BeautifulSoup
 from urllib.request import Request, urlopen
 import pymysql
 import rds_db as db
@@ -35,7 +34,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 migrate = Migrate(app, db)
 
-polly = boto3.client("polly")
+polly = boto3.client("polly", region_name="us-east-1")
 
 # simple function that calles teh aws function and translates any inputted text.
 client = boto3.client('translate', region_name="us-east-1")
