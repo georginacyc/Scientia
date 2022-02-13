@@ -12,6 +12,8 @@ import boto3
 from botocore.config import Config
 from bs4 import BeautifulSoup
 from urllib.request import Request, urlopen
+import pymysql
+import rds_db as db
 
 from boto3 import Session
 from botocore.exceptions import BotoCoreError, ClientError
@@ -164,6 +166,7 @@ def getPosts():
     
     return render_template("forum_posts.html", posts=posts)
 
+# Hugo's Codes
 @app.route('/forumSP', methods=["GET", "POST"])
 def getPostsSP():
     return render_template("forum_posts_trans.html")
@@ -180,6 +183,36 @@ def searchPosts():
     # retrieving search term from search bar, then redirecting back to forums page with results.
     searchForm = request.form['searchTerm']
     return redirect("/forum?s=" + str(searchForm))
+
+# Nicholas' Codes
+@app.route('/donation', methods=["GET", "POST"])
+def donate():
+    return render_template("donation.html")
+
+@app.route('/insert',methods = ['POST'])
+def insert():
+    
+    if request.method == 'POST':
+        tname = request.form['tname']
+        amount = request.form['amount']
+        db.insert_details(tname,amount)
+        details = db.get_details()
+        print(details)
+        for detail in details:
+            var = detail
+        return render_template('success.html')
+
+@app.route('/profile')
+def viewProfile():
+    return render_template("profile.html")
+
+@app.route('/success')
+def paymentsuccess():
+    return render_template("success.html")
+
+@app.route('/cancelled')
+def paymentcancelled():
+    return render_template("Oncancel.html")
 
 if __name__ == '__main__':
     app.run(threaded=True, host='0.0.0.0', port=8080)
