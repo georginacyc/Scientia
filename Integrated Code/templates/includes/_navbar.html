@@ -1,0 +1,40 @@
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+    <!-- Brand -->
+    <a class="navbar-brand" href="/">Scientia</a>
+    <ul class="navbar-nav">
+        <!-- Dropdown -->
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbardrop1" data-toggle="dropdown">
+                Forum
+            </a>
+            <div class="dropdown-menu">
+                <a class="dropdown-item" href="#">hello</a>
+                <a class="dropdown-item" href="#">not my part lols</a>
+            </div>
+        </li>
+
+        <!-- Dropdown (show this if they ARE logged in) -->
+        {% if current_user.is_authenticated %}
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbardrop2" data-toggle="dropdown">
+                {{ current_user.fname }}
+            </a>
+            <div class="dropdown-menu">
+                <a class="dropdown-item" href="{{ url_for('editProfile') }}">Edit Profile</a>
+                <a class="dropdown-item" href="{{ url_for('logout') }}">Logout</a>
+            </div>
+        </li>
+        {% else %}
+        <!-- Dropdown (only show this if user is not logged in) -->
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbardrop3" data-toggle="dropdown">
+                Account
+            </a>
+            <div class="dropdown-menu">
+                <a class="dropdown-item" href="login">Login</a>
+                <a class="dropdown-item" href="register">Register</a>
+            </div>
+        </li>
+        {% endif %}
+    </ul>
+</nav>

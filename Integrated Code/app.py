@@ -14,6 +14,11 @@ from urllib.request import Request, urlopen
 import pymysql
 import rds_db as db
 
+from flask_login import login_required, current_user, login_user, logout_user
+from models import login, UserModel
+import logging
+from os import urandom
+
 from boto3 import Session
 from botocore.exceptions import BotoCoreError, ClientError
 
@@ -212,6 +217,86 @@ def paymentsuccess():
 @app.route('/cancelled')
 def paymentcancelled():
     return render_template("Oncancel.html")
+
+# Ryan's Codes
+
+# Initialise the app
+db.init_app(app)
+login.init_app(app)
+login.login_view = 'login'
+
+@app.route('/login', methods=['POST', 'GET'])
+def login():
+    if current_user.is_authenticated:
+        flash("You are already logged in!")
+        return redirect('/profile')
+
+    if request.method == 'POST':
+        req_email = request.form['email']
+        logging.warning(req_email)
+        logging.warning(UserModel.query.filter_by(email=req_email))
+        user = UserModel.query.filter_by(email=req_email).first()
+        logging.warning(user)
+        if user is not None and user.check_password(request.form['password']):
+            login_user(user)
+            return redirect('/profile')
+
+    return render_template('login.html')
+
+
+@app.route('/register', methods=['POST', 'GET'])
+def register():
+    if current_user.is_authenticated:
+        flash("You are already logged in!")
+        return redirect('/profile')
+
+    if request.method == 'POST':
+        email = request.form['email']
+        fname = request.form['fname']
+        lname = request.form['lname']
+        bio = request.form['bio']
+        learn = request.form['learn']
+        teach = request.form['teach']
+        password = request.form['password']
+
+        if UserModel.query.filter_by(email=email).first():
+            return ('Email already Present')
+
+        user = UserModel(email=email, fname=fname, lname=lname, bio=bio, learn=learn, teach=teach)
+        user.set_password(password)
+        db.session.add(user)
+        db.session.commit()
+        return redirect('/login')
+    return render_template('register.html')
+
+
+@app.route('/logout')
+def logout():
+    logout_user()
+    return redirect('/')
+
+@app.route('/profile', methods=["GET", "POST"])
+@login_required
+def getProfile():
+    return render_template('profile.html')
+
+@app.route('/editProfile', methods=["GET", "POST"])
+@login_required
+def editProfile():
+    if request.method == 'POST':
+        email = request.form['email']
+
+        get_user = UserModel.query.filter_by(email=email).first()
+        get_user.fname = request.form['fname']
+        get_user.lname = request.form['lname']
+        get_user.bio = request.form['bio']
+        get_user.learn = request.form['learn']
+        get_user.teach = request.form['teach']
+
+        db.session.commit()
+        return redirect('/profile')
+
+    return render_template('edit_profile.html')
 
 if __name__ == '__main__':
     app.run(threaded=True, host='0.0.0.0', port=8080)

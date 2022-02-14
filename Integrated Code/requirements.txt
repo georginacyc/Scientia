@@ -5,3 +5,4 @@ Flask-Migrate
 pymysql
 WTForms
 flask-wtf
+flask_login
