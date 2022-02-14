@@ -22,7 +22,7 @@ import logging
 from os import urandom
 import uuid
 
-dynamodb = boto3.resource('dynamodb')
+dynamodb = boto3.resource('dynamodb', region_name="us-east-1")
 table = dynamodb.Table('Scientia-Transactions')
 
 AUDIO_FORMATS = {"ogg_vorbis": "audio/ogg",
@@ -41,7 +41,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 migrate = Migrate(app, db)
 
-polly = boto3.client("polly")
+polly = boto3.client("polly", region_name="us-east-1")
 
 # simple function that calles teh aws function and translates any inputted text.
 client = boto3.client('translate', region_name="us-east-1")
