@@ -1,0 +1,100 @@
+{% extends "template.html" %}
+
+{% block title %} - Forum {% endblock %}
+{% block head %}
+  {{ super() }}
+  <style>
+  #content_body{
+    width:60%;
+  }
+    .post_table {
+      width: 100%;
+      border: 1px solid black;
+      border-radius: 10px;
+    }
+    td {
+      padding: 10px
+    }
+    form { 
+      display: flex; 
+    }
+    input[type=text] { 
+      flex-grow: 1; 
+    }
+    
+        .post_table_static {
+      width: 100%;
+      border: 1px solid black;
+      border-radius: 10px;
+    }
+    td {
+      padding: 10px
+    }
+    form { 
+      display: flex; 
+    }
+    input[type=text] { 
+      flex-grow: 1; 
+    }
+    
+  .button {
+  background-color: #f4511e;
+  border: none;
+  color: white;
+  padding: 5px 13px;
+  text-align: center;
+  font-size: 16px;
+
+  opacity: 0.6;
+  transition: 0.3s;
+  display: inline-block;
+  text-decoration: none;
+  cursor: pointer;
+  }
+
+.button:hover {opacity: 1}
+    
+  </style>
+  
+  
+  
+{% endblock %}
+
+{% block content_body %}
+  <table style="width: 100%">
+    <tr>
+      <td>
+        <h3>All Posts</h3>
+      </td>
+      <td style="text-align: right; width:50%">
+        <form action="{{ url_for('searchPosts') }}" method="POST">
+          <input type="text" class="form-control" id="searchBar" name="searchTerm" placeholder="Search...">
+          <button type="submit" href="#" class="btn btn-dark" id="searchButton">Search</button>
+        </form>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  {% for post in posts %}
+  <table class="post_table">
+    <form action="{{ url_for('translatePosts') }}" method="POST">
+    <tr>
+      <td>
+        <input type="text" name="postId" value="{{ post.id }}" hidden>
+        <i>{{ post.forum }} • {{ post.author }}</i> <br>
+        <b>{{ post.title }}</b> <br>
+        {{ post.body }}<br><br>
+        <button type="submit" class="button">Translate</button> <br>
+        </form>
+      </td>
+    </tr>    
+  </table>
+  <br>
+  {% endfor %}
+  <script>
+    function translate_post(id) {
+      window.location.href ="/forumTR?id=" + String(id);
+    }
+  </script>
+{% endblock %}

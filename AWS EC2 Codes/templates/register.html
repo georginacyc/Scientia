@@ -1,0 +1,142 @@
+{% extends "template.html" %}
+{% block title %}Scientia - Register{% endblock %}
+{% block content_body %}
+
+<!--<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/register.css') }}">-->
+<!--<link href="https://fonts.googleapis.com/css2?family=Jost:wght@500&display=swap" rel="stylesheet">-->
+
+<!--<div class="main">-->
+<!--    <input type="checkbox" id="chk" aria-hidden="true">-->
+
+<!--    <div class="signup">-->
+<!--        <form action="" method="POST">-->
+<!--            <label for="chk" aria-hidden="true">Sign up</label>-->
+<!--            <input type="text" name="fname" placeholder="First Name" required="">-->
+<!--            <input type="text" name="lname" placeholder="Last Name" required="">-->
+<!--            <input type="email" name="email" placeholder="Email" required="">-->
+<!--            <input type="password" name="password" placeholder="Password" required="">-->
+<!--            <input type="text" name="bio" placeholder="Describe yourself...">-->
+<!--            <input type="text" name="learn" placeholder="What do you want to learn?">-->
+<!--            <input type="text" name="teach" placeholder="What do you want to teach?">-->
+<!--            <input class="submit-button" type="submit" value="submit">-->
+<!--        </form>-->
+<!--    </div>-->
+
+<!--    <div class="login">-->
+
+<!--    </div>-->
+<!--</div>-->
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="static/css/style.css">
+<div class="signup body-content">
+            <!-- Sign up form -->
+        <section class="signup">
+            <div class="container">
+                <div class="signup-content">
+                    <div class="signup-form">
+                        <form action="" method="POST">
+                        <h2 class="form-title">Sign up as a Student</h2>
+                        <div class="register-form" id="register-form">
+                            <div class="form-group">
+                                <input type="text" name="fname" placeholder="First Name" required="">
+                            </div>
+                            <div class="form-group">
+                                <input type="text" name="lname" placeholder="Last Name" required="">
+                            </div>
+                            <div class="form-group">
+                                <input type="email" name="email" placeholder="Email" required="">
+                            </div>
+                            <div class="form-group">
+                                <input type="password" name="password" placeholder="Password" required="">
+                            </div>
+                            <div class="form-group">
+                                <input type="text" name="bio" placeholder="Describe yourself...">
+                            </div>
+                            <div class="form-group">
+                                <input type="text" name="learn" placeholder="What do you want to learn?">
+
+                            </div>
+                            <div class="form-group">
+                                <input type="text" name="teach" placeholder="What do you want to teach?">
+                            </div>
+                            <div class="form-group form-button">
+                                <input class="submit-button" type="submit" value="submit">
+                            </div>
+                        </div>
+                        </form>
+                    </div>
+                    <div class="signup-image">
+                        <figure><img src="static/Images/signup-image.jpg" alt="sign up image"></figure>
+                        <a href="/login" class="signup-image-link">I am already member</a>
+                        <a href="/register" class="signup-image-link">Sign Up as an Expert</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+            </div>
+            <hr />
+            
+            <footer class="site-footer">
+      <div class="container">
+        <div class="row">
+
+          <div class="col-lg-5 mx-lg-auto col-md-8 col-10">
+            <h1 class="text-white" data-aos="fade-up" data-aos-delay="100">Bringing students <strong>together</strong>.</h1>
+          </div>
+
+          <div class="col-lg-3 col-md-6 col-12" data-aos="fade-up" data-aos-delay="200">
+            <h4 class="my-4">Contact Info</h4>
+
+            <p class="mb-1">
+              <i class="fa fa-phone mr-2 footer-icon"></i> 
+              +65 6648 9284
+            </p>
+
+            <p>
+              <a href="#">
+                <i class="fa fa-envelope mr-2 footer-icon"></i>
+                mindmover@mail.com
+              </a>
+            </p>
+          </div>
+
+          <div class="col-lg-3 col-md-6 col-12" data-aos="fade-up" data-aos-delay="300">
+            <h4 class="my-4">Our Office</h4>
+
+            <p class="mb-1">
+              <i class="fa fa-home mr-2 footer-icon"></i> 
+              Ang Mo Kio Avenue 3
+            </p>
+          </div>
+
+          <div class="col-lg-4 mx-lg-auto text-center col-md-8 col-12" data-aos="fade-up" data-aos-delay="400">
+            <p class="copyright-text">Copyright &copy; 2021 MindMover
+            <br>
+          </div>
+
+
+          <div class="col-lg-3 mx-lg-auto col-md-6 col-12" data-aos="fade-up" data-aos-delay="600">
+            <ul class="social-icon">
+              <li><a href="#" class="fa fa-instagram"></a></li>
+              <li><a href="#" class="fa fa-twitter"></a></li>
+              <li><a href="#" class="fa fa-dribbble"></a></li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+    </footer>
+    
+            <!-- SCRIPTS -->
+     <script src="static/scripts/jquery.min.js"></script>
+     <script src="static/scripts/bootstrap.min.js"></script>
+     <script src="static/scripts/aos.js"></script>
+     <script src="static/scripts/owl.carousel.min.js"></script>
+     <script src="static/scripts/smoothscroll.js"></script>
+     <script src="static/scripts/custom.js"></script>
+     <script src="static/scripts/vendor/jquery/jquery.min.js"></script>
+     <script src="static/scripts/main.js"></script>
+
+{% endblock %}

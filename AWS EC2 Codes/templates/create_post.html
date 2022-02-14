@@ -1,0 +1,85 @@
+{% extends "template.html" %}
+{% block title %}Scientia - Login{% endblock %}
+{% block content_body %}
+
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="static/css/style.css">
+
+<br><br>
+<!DOCTYPE html>
+<html>
+    <style>#content_body{
+    width:60%;
+  }</style>
+  <head>
+    <title>Create Post</title>
+    <script src="https://unpkg.com/vue"></script>
+    <script src="https://unpkg.com/axios@0.2.1/dist/axios.min.js"></script>
+    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.1.12.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  </head>
+  <body>
+		<div class="content_body">
+			<header>
+				<h1>Create Post</h1>
+			</header>
+			<form>
+                <b>Forum:</b> 
+                <select class="form-select" id="forum">
+                    <option value="Yoga">Yoga</option>
+                    <option value="Canning">Canning</option>
+                </select><br><br>
+                <b>Author: </b> <input id="author" class="form-control" type="text" value="{{ current_user.fname }} {{ current_user.lname }}" readonly> <br><br>
+                <b>Title:</b> <input id="title" class="form-control" type="text"><br><br>
+                <b>Body:</b> <textarea id="body" class="form-control"></textarea><br><br>
+                <input onclick="create_post()" class="btn btn-dark" style="float:right" value="Post">
+            </form>
+		</div>	
+  
+    <script>
+      function g_ajaxer(params, ok_cb, fail_cb){
+            $.ajax({
+                url: "https://o09xkbeb4a.execute-api.us-east-1.amazonaws.com/prod",
+                type: "PUT",
+                data: JSON.stringify(params),
+                crossDomain: true,
+                contentType: "application/json",
+                dataType: "json",
+                success: ok_cb,
+                error: fail_cb,
+                timeout: 3000,
+                async: false
+            });
+            
+        }
+        function handleFailure(){
+            console.log("FAIL");
+        }
+        function handleSuccess(){
+            console.log("Success!");
+            window.location.href = "/forum";
+        }
+        function create_post() {
+            var forum = document.getElementById("forum").value;
+            var title = document.getElementById("title").value;
+            var body = document.getElementById("body").value;
+            var author = document.getElementById("author").value;
+            
+            post_details = {
+                forum: forum,
+                type: "post",
+                title: title,
+                body: body,
+                author: author
+            }
+            
+            g_ajaxer(post_details, handleSuccess, handleFailure);
+        }
+        
+
+   
+    </script>
+  </body>
+{% endblock %}
