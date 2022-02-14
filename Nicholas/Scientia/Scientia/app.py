@@ -42,6 +42,16 @@ def paymentsuccess():
 def paymentcancelled():
     return render_template("Oncancel.html")
 
+# Nina's Codes
+
+@app.route('/video_upload')
+def upload():
+    return render_template("upload_video.html")
+
+@app.route('/video')
+def display_video():
+    return render_template("video.html")
+
 #if __name__ == '__main__':
 #  app.run(threaded=True, host='0.0.0.0', port=8080)
 

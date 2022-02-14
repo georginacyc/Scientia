@@ -1,0 +1,46 @@
+{% extends "template.html" %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+
+{% block content_body %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="https://unpkg.com/vue"></script>
+        <script src="https://unpkg.com/axios@0.2.1/dist/axios.min.js"></script>
+        <script src="https://sdk.amazonaws.com/js/aws-sdk-2.1.12.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    </head>
+    <body>
+        <div>
+            <h2>My Video</h2>
+            <video id="video" controls preload="metadata" crossorigin=anonymous style="width:100%; height:100%">
+               <source src="https://test-scientia-1.s3.amazonaws.com/mp4/yoga-welcome.mp4" type="video/mp4">
+               <track default label="German" kind="subtitles" srclang="de" src="https://test-scientia-1.s3.amazonaws.com/translated/yoga-welcome.de.vtt">
+            </video>
+        </div>
+        
+        <script type="text/javascript">
+            AWS.config.update({
+              accessKeyId: "ASIAULXMC6DL2HRDLN4A",
+              secretAccessKey: "UQhT8etDr4Hf4VCCjqAQogZLgPV32mXW1uJXP3oX",
+              sessionToken: "FwoGZXIvYXdzEFMaDFfse5u98/sUcSAkfiK5AeGlnIbtUMh0YsAL/Gx7sn/9haDqJkXTiPU5VTTdaU8SU4MaWpt6NHxx7ubKKjEsOi7eQIjqTWYpHnWNCQ8CFp6wMhci7xA+dnstgZjVttNIv8NRa+eBr+JUuBzQ7E+FwY8CofF1OdyiQSj1KHgdd8LUTwed7nsOF2U11/YKCzTcT+pSlmwjqQlSq041eNxjjhMiQvWGudufuMEHHoe+FjS3yiTNCZaOZ6/h5K94QwuL8Tlx81MCxhE3KIG2qJAGMi2gRnobMeq96L955D2v/Jefyv8bmJLG8y8stYlIWziGncrl7VxLTsa1TQKuQqw="  
+            });   
+            var s3 = new AWS.S3();
+            
+            var params = { 
+             Bucket: 'test-scientia-1'
+            }
+            
+             s3.listObjects(params, function (err, data) {
+              if (err) {
+                  console.log("Error listing: ", err);
+              } else {
+                  console.log(data);
+              }
+             });
+        </script>
+    </body>
+</html>
+{% endblock %}
