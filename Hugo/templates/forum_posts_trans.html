@@ -141,18 +141,18 @@
                 // Validate the fields in the form, display a message if
                 // unexpected values are encountered
                 if (voiceMenu.selectedIndex <= 0 || text.value.length === 0) {
-                    alert('Please fill in all the fields.');
+                                        player.src = '/read?voiceId=' +
+                        encodeURIComponent(selectedVoice) +
+                        '&text=' + encodeURIComponent(text.value) +
+                        '&outputFormat=' + supportedFormats[0];
+                    player.play();
                 } else {
                     var selectedVoice = voiceMenu
                                             .options[voiceMenu.selectedIndex]
                                             .value;
 
                     // Point the player to the streaming server
-                    player.src = '/read?voiceId=' +
-                        encodeURIComponent(selectedVoice) +
-                        '&text=' + encodeURIComponent(text.value) +
-                        '&outputFormat=' + supportedFormats[0];
-                    player.play();
+
                 }
 
                 // Stop the form from submitting,
@@ -230,17 +230,18 @@
           {{ message }}
       {% endfor %}
           <br><br>
-                  <div>
-            <label for="voice">Select a voice:</label>
+                  <div hidden>
             <select id="voice" name="voiceId" disabled>
-                <option value="">Choose a voice...</option>
+                <option value="" selected hidden></option>
             </select>
         </div>
     
         <div>
             <label for="text"></label>
             <textarea id="text" maxlength="1000" minlength="1" name="text"
-                    style="display:none;" placeholder="Type some text here...">NICHT AUF WINDOWS 11 11 UPGRADEN ist derzeit extrem instabil und nicht getestet, viele Programme werden auf mehrere Probleme stoßen. Bitte halten Sie das Update zurück, wenn Sie dies planen. Wenn Sie auf Windows 11 aktualisiert haben, geraten Sie nicht in Panik, da es eine einfache Möglichkeit gibt, wieder zu Windows 10 zu wechseln. Solange Sie Windows 11 nicht länger als 10 Tage installiert haben, gibt es eine integrierte Funktion, mit der Sie zu Windows 10 zurückkehren können.</textarea>
+                    style="display:none;" placeholder="Type some text here...">{% for message in get_flashed_messages() %}
+          {{ message }}
+      {% endfor %}</textarea>
         </div>
       
       <input type="submit" value="Read" id="submit" />

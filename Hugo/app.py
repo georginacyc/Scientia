@@ -35,7 +35,7 @@ migrate = Migrate(app, db)
 
 polly = boto3.client("polly")
 
-# simple function that calles teh aws function and translates any inputted text.
+# simple function that calls the aws function and translates any inputted text.
 client = boto3.client('translate', region_name="us-east-1")
 text = "DO NOT UPGRADE TO WINDOWS 11 11 is currently extremely unstable and untested, many programs will meet with multiple issues. Please hold off the update if youre planning to do so. If you did upgrade to Windows 11, don't panic as theres an easy way to transition back into Windows 10. As long as it hasn't been more than 10 days since you installed Windows 11 theres a built in feature that allows you to revert back to Windows 10."
 result = client.translate_text(Text=text, SourceLanguageCode="en",
@@ -85,7 +85,7 @@ def read():
         try:
             # Request speech synthesis
             response = polly.synthesize_speech(Text=text,
-                                               VoiceId=voiceId,
+                                               VoiceId="Marlene",
                                                OutputFormat=outputFormat)
         except (BotoCoreError, ClientError) as err:
             # The service returned an error
@@ -170,7 +170,7 @@ def getPostsSP():
 @app.route('/forumTR', methods=["POST"])
 def transButton():
     flash (result['TranslatedText'])
-    return redirect('/forumSP')
+    return redirect('/forumSP');
 
 @app.route('/search', methods=["POST"])
 def searchPosts():

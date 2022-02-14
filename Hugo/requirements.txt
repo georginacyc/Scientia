@@ -3,5 +3,6 @@ boto3
 Flask-sqlalchemy
 Flask-Migrate
 pymysql
+BeautifulSoup
 WTForms
 flask-wtf

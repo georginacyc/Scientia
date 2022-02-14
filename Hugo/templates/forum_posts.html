@@ -89,19 +89,21 @@
         <button type="submit" class="button">Translate</button> <br>
         </form>
       </td>
-    </tr>    
-    </form>
+    </tr>
   </table>
   
   <br>
   
   {% for post in posts %}
   <table class="post_table">
+    <form action="{{ url_for('transButton') }}" method="POST">
     <tr>
       <td>
         <i>{{ post.forum }} • {{ post.author }}</i> <br>
         <b>{{ post.title }}</b> <br>
-        {{ post.body }}
+        {{ post.body }}<br><br>
+        <button type="submit" class="button">Translate</button> <br>
+        </form>
       </td>
     </tr>    
   </table>
