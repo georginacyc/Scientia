@@ -22,7 +22,7 @@ import logging
 from os import urandom
 import uuid
 
-dynamodb = boto3.resource('dynamodb', region_name="us-east-1")
+dynamodb = boto3.resource('dynamodb', region_name="us-east-1", aws_access_key_id="AKIAU6ASZSRRNBHIJ2M2", aws_secret_access_key="6a7Bu6Wxp2EvYCkptYKud4vx5i8KuM")
 table = dynamodb.Table('Scientia-Transactions')
 
 AUDIO_FORMATS = {"ogg_vorbis": "audio/ogg",
@@ -41,10 +41,10 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 migrate = Migrate(app, db)
 
-polly = boto3.client("polly", region_name="us-east-1")
+polly = boto3.client("polly", region_name="us-east-1", aws_access_key_id="AKIAU6ASZSRRNBHIJ2M2", aws_secret_access_key="6a7Bu6Wxp2EvYCkptYKud4vx5i8KuM")
 
 # simple function that calles teh aws function and translates any inputted text.
-client = boto3.client('translate', region_name="us-east-1")
+client = boto3.client('translate', region_name="us-east-1", aws_access_key_id="AKIAU6ASZSRRNBHIJ2M2", aws_secret_access_key="6a7Bu6Wxp2EvYCkptYKud4vx5i8KuM")
 text = "DO NOT UPGRADE TO WINDOWS 11 11 is currently extremely unstable and untested, many programs will meet with multiple issues. Please hold off the update if youre planning to do so. If you did upgrade to Windows 11, don't panic as theres an easy way to transition back into Windows 10. As long as it hasn't been more than 10 days since you installed Windows 11 theres a built in feature that allows you to revert back to Windows 10."
 result = client.translate_text(Text=text, SourceLanguageCode="en",
 TargetLanguageCode="de")
@@ -132,7 +132,7 @@ def transButton():
         #query = forum_posts.query.filter((forum_posts.id.equal(search_term)))
         #posts = query.first
         posts=forum_posts.query.get(search_term)
-        client = boto3.client('translate', region_name="us-east-1")
+        client = boto3.client('translate', region_name="us-east-1", aws_access_key_id="AKIAU6ASZSRRNBHIJ2M2", aws_secret_access_key="6a7Bu6Wxp2EvYCkptYKud4vx5i8KuM")
         text = str(posts.body)
         result = client.translate_text(Text=text, SourceLanguageCode="en",
         TargetLanguageCode="de")
